@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+        .quiz-container {
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .question {
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .options {
+            display:flow-root;
+            flex-direction:column-reverse;
+        }
+        .option {
+            margin-bottom: 10px;
+        }
+        .btn {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container" id="quiz-container">
+    <div class="question" id="question"></div>
+    <div class="options" id="options"></div>
+    <div>
+        <button class="btn" id="prevButton" onclick="prevQuestion()" style="display: none;">Previous</button>
+        <button class="btn" id="nextButton" onclick="nextQuestion()">Next</button>
+        <button class="btn" id="submitButton" onclick="submitQuiz()" style="display: none;">Submit</button>
+    </div>
+</div>
+
+<script>
+    var currentQuestion = 0;
+    var score = 0;
+
+    var questions = [
+        {
+            question: "What is the capital of Telangana?",
+            options: ["Karimnagar","Hyderabad","Waranagal","Huzurabad"],
+            answer: 1 
+        },
+        {
+            question: "What is the capital of India?",
+            options: ["Telangana","Madhya Pradesh","Delhi","Goa"],
+            answer:2
+        },
+        {
+            question: "Which of the animal mostly found in arctic region?",
+            options: ["Kangaroo","Penguin","White Tiger","Kiwi"],
+            answer:1
+        },
+        {
+            question: "What is the full form of IBM?",
+            options:["Indian Business System","International Business System","Internally Built System","Integrated Business System"],
+            answer:1
+        },
+        {
+            question: "Which of the following natural disasters mostly occur in Nepal?",
+            options: ["Tsunami","Earthquake","Floods","Volcanic erruption"],
+            answer:1
+        },
+        {
+            question: "Which country is more stronger in technical aspect as of 2022?",
+            options: ["India","America","Japan","China"],
+            answer:2
+        },
+        {
+            question: "Which country has highest population as of 2021?",
+            options:["India","China","America","Russia"],
+            answer:1
+        },
+        {
+            question: "Which of the company did Elon Musk recently bought?",
+            options:["Twitter","Whatsapp","Facebook","Google"],
+            answer:0
+        },
+        {
+            question: "Sathya Nadella is the CEO of?",
+            options:["Google","Microsoft","Amazon","Flipkart"],
+            answer:1
+        },
+        {
+            question: "What is the answer for (3*4)-3/(3*6)-(4+5)?",
+            options:["2.2","1.1","2","1"],
+            answer:3
+        },
+    ];
+
+    function loadQuestion() {
+        var q = questions[currentQuestion];
+        document.getElementById('question').innerHTML = (currentQuestion + 1) + ". " + q.question;
+        var optionsHtml = '';
+        for (var i = 0; i < q.options.length; i++) {
+            optionsHtml += `<input type="radio" name="option" value="${i}" id="option${i + 1}"><label for="option${i + 1}" class="option">${q.options[i]}</label><br>`;
+        }
+        document.getElementById('options').innerHTML = optionsHtml;
+    }
+
+    function nextQuestion() {
+        var selectedOption = document.querySelector('input[name="option"]:checked');
+        if (selectedOption) {
+            if (parseInt(selectedOption.value) === questions[currentQuestion].answer) {
+                score++;
+            }
+            selectedOption.checked = false;
+        }
+        currentQuestion++;
+        if (currentQuestion < questions.length) {
+            loadQuestion();
+            if (currentQuestion > 0) {
+                document.getElementById('prevButton').style.display = 'inline-block';
+            }
+            if (currentQuestion === questions.length - 1) {
+                document.getElementById('nextButton').style.display = 'none';
+                document.getElementById('submitButton').style.display = 'inline-block';
+            }
+        }
+    }
+
+    function prevQuestion() {
+        if (currentQuestion > 0) {
+            currentQuestion--;
+            loadQuestion();
+            if (currentQuestion === 0) {
+                document.getElementById('prevButton').style.display = 'none';
+            }
+            if (currentQuestion < questions.length - 1) {
+                document.getElementById('nextButton').style.display = 'inline-block';
+                document.getElementById('submitButton').style.display = 'none';
+            }
+        }
+    }
+
+    function submitQuiz() {
+        var selectedOption = document.querySelector('input[name="option"]:checked');
+        if (selectedOption) {
+            if (parseInt(selectedOption.value) === questions[currentQuestion].answer) {
+                score++;
+            }
+        }
+        var quizContainer = document.getElementById('quiz-container');
+        quizContainer.innerHTML = `<h2>Quiz Completed!</h2><p>Your score is: ${score} out of ${questions.length}</p>`;
+    }
+
+    loadQuestion();
+</script>
+
+</body>
+</html>
